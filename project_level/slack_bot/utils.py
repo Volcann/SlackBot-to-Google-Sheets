@@ -2,14 +2,19 @@ import re
 import math
 import json
 import gspread
-import os
+import os, logging
 def get_gspread_client():
-    json_str = os.getenv("GS_CREDENTIALS_JSON")
-    if not json_str:
-        raise RuntimeError("GOOGLE_CREDS_JSON is not set in the environment")
-    creds_dict = json.loads(json_str)
-    client = gspread.service_account_from_dict(creds_dict)
-    return client
+    raw = os.getenv("GS_CREDENTIALS_JSON")
+    if not raw:
+        raise RuntimeError("GS_CREDENTIALS_JSON is not set in the environment")
+
+    try:
+        creds_dict = json.loads(raw)
+    except json.JSONDecodeError as e:
+        logging.error("Failed to parse GS_CREDENTIALS_JSON: %r", raw[:200])
+        raise RuntimeError("Invalid JSON in GS_CREDENTIALS_JSON") from e
+
+    return gspread.service_account_from_dict(creds_dict)
 
 # Function to clean text encoding issues
 def clean_text(text):
