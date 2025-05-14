@@ -15,7 +15,7 @@ def get_gspread_client():
         logging.error("Failed to parse GS_CREDENTIALS_JSON: %r", raw[:200])
         raise RuntimeError("Invalid JSON in GS_CREDENTIALS_JSON") from e
 
-    return gspread.service_account_from_dict(creds_dict)
+    return gspread.service_account_from_dict(json.dumps(creds_dict, indent=2))
 
 # Function to clean text encoding issues
 def clean_text(text):
