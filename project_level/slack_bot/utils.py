@@ -7,7 +7,8 @@ import os, logging
 def get_gspread_client():
     raw = os.getenv("GS_CREDENTIALS_JSON")
     creds_dict = json.loads(raw)
-    return gspread.service_account_from_dict(creds_dict)
+    json = json.dumps(creds_dict, indent=2)
+    return gspread.service_account_from_dict(json)
 
 # Function to clean text encoding issues
 def clean_text(text):
