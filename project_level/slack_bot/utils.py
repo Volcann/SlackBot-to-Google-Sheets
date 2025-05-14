@@ -3,6 +3,7 @@ import math
 import json
 import gspread
 import os, logging
+
 def get_gspread_client():
     raw = os.getenv("GS_CREDENTIALS_JSON")
     if not raw:
