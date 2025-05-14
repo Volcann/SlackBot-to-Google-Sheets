@@ -22,11 +22,8 @@ RUN pip install -r requirements.txt
 # Copy the rest of the project files
 COPY . .
 
-# Collect static files (optional, for admin)
-RUN python manage.py collectstatic --noinput
-
-# Expose the port Railway will use
+# Expose the port if needed (optional)
 EXPOSE 8000
 
-# Start the server with Gunicorn
-CMD ["gunicorn", "your_project_name.wsgi:application", "--bind", "0.0.0.0:8000"]
+# Start the Slack bot (replace main.py with your actual script)
+CMD ["python", "main.py"]
