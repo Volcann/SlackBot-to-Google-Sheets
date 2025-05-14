@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Slack Channel Messages</title>
+    <!-- Google Font -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg-gradient-start: #4e54c8;
+        --bg-gradient-end: #8f94fb;
+        --card-gradient-start: #ffffff;
+        --card-gradient-end: #f0f4ff;
+        --text-color: #333;
+        --meta-color: #555;
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        font-family: "Inter", sans-serif;
+        background: linear-gradient(
+          135deg,
+          var(--bg-gradient-start),
+          var(--bg-gradient-end)
+        );
+        color: var(--text-color);
+        padding: 1rem;
+      }
+      .container {
+        max-width: 800px;
+        margin: auto;
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+      }
+      header {
+        background: linear-gradient(90deg, #667eea, #764ba2);
+        color: #fff;
+        padding: 1.5rem;
+        text-align: center;
+      }
+      header h1 {
+        font-size: 1.75rem;
+      }
+      .warning {
+        background: #fff6e5;
+        padding: 1rem;
+        border-left: 4px solid #ffcc80;
+        margin: 1rem;
+        border-radius: 4px;
+      }
+      .message-list {
+        padding: 1rem;
+      }
+      .message {
+        display: flex;
+        gap: 1rem;
+        padding: 1rem;
+        margin-bottom: 1rem;
+        background: linear-gradient(
+          120deg,
+          var(--card-gradient-start),
+          var(--card-gradient-end)
+        );
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        align-items: flex-start;
+        transition: transform 0.2s;
+      }
+      .message:hover {
+        transform: translateY(-2px);
+      }
+      .avatar {
+        flex-shrink: 0;
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        object-fit: cover;
+      }
+      .content {
+        flex: 1;
+      }
+      .content p {
+        margin-bottom: 0.5rem;
+        line-height: 1.4;
+      }
+      .content strong {
+        color: #2a2a2a;
+      }
+      .meta {
+        font-size: 0.85rem;
+        color: var(--meta-color);
+      }
+      .error {
+        color: #e53e3e;
+        text-align: center;
+        padding: 1rem;
+      }
+      @media (max-width: 600px) {
+        .message {
+          flex-direction: column;
+          align-items: center;
+          text-align: center;
+        }
+        .avatar {
+          margin-bottom: 0.5rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      {% if warn_missing %}
+      <div class="warning">
+        ⚠️ Some profile or channel names could not be fetched (missing
+        scopes).<br />
+        Please add <code>channels:read</code>, <code>groups:read</code>,
+        <code>im:read</code>, <code>mpim:read</code> and verify
+        <code>users.profile:read</code> in your Bot Token Scopes, then reinstall
+        the app.
+      </div>
+      {% endif %} {% if error %}
+      <p class="error">{{ error }}</p>
+      {% else %} {% if messages %}
+      <header>
+        <h1>Slack Channel: #{{ messages.0.channel_name }}</h1>
+      </header>
+      <div class="message-list">
+        {% for msg in messages %}
+        <div class="message">
+          {% if msg.user_avatar %}
+          <img
+            src="{{ msg.user_avatar }}"
+            class="avatar"
+            alt="avatar of {{ msg.user_name }}"
+          />
+          {% endif %}
+          <div class="content">
+            <p>
+              <strong>{{ msg.user_name }}</strong>
+              <span>(<code>{{ msg.user }}</code>)</span>
+            </p>
+            <p>{{ msg.text }}</p>
+            <div class="meta">
+              In <strong>#{{ msg.channel_name }}</strong> · ts: {{ msg.ts }}
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <p class="meta" style="text-align: center; padding: 2rem">
+        No messages found.
+      </p>
+      {% endif %} {% endif %}
+    </div>
+  </body>
+</html>

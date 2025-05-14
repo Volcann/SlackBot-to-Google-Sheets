@@ -1,0 +1,113 @@
+<!-- templates/slack_messages/member_messages.html -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Report of {{ user_name }}</title>
+
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      crossorigin="anonymous"
+    />
+
+    <!-- Custom Styles -->
+    <style>
+      body {
+        min-height: 100vh;
+        margin: 0;
+        font-family: "Segoe UI", sans-serif;
+        color: #f1f5f9;
+        background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+      }
+      .navbar {
+        background: rgba(15, 32, 39, 0.9);
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+      }
+
+      .navbar-brand {
+        color: #ffffff !important;
+        font-weight: bold;
+        font-size: 1.5rem;
+      }
+      .card {
+        background-color: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 0.75rem;
+      }
+      .card-title {
+        color: #ffffff;
+      }
+      .message-text {
+        color: #f1f5f9;
+        white-space: pre-wrap;
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg">
+      <div class="container">
+        <a class="navbar-brand" href="#">Report generator for Slack</a>
+      </div>
+    </nav>
+    <div class="container py-5">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h2 mb-0">Report for {{ user_name }}</h1>
+        {% if user_avatar %}
+        <img
+          src="{{ user_avatar }}"
+          alt="{{ user_name }}’s avatar"
+          class="rounded-circle"
+          width="48"
+        />
+        {% endif %}
+      </div>
+      <div class="d-flex justify-content-start mb-4">
+        <a
+          href="{% url 'pmo_report' %}"
+          class="btn btn-outline-light rounded-pill px-4 py-2 shadow-sm"
+          style="font-weight: 500"
+        >
+          ← Back to PMO Report
+        </a>
+      </div>
+
+      {% if messages %}
+      <div class="row g-4">
+        {% for msg in messages %}
+        <div class="col-md-6">
+          <div class="card p-3 h-100">
+            <!-- Label -->
+            <h5 class="card-title">{{ msg.label }}</h5>
+
+            <!-- Collapse raw text -->
+            <button
+              class="btn btn-outline-light btn-sm mt-2"
+              data-bs-toggle="collapse"
+              data-bs-target="#raw-{{ msg.id }}"
+              aria-expanded="false"
+            >
+              View Message
+            </button>
+            <div class="collapse mt-2" id="raw-{{ msg.id }}">
+              <pre class="text-light bg-dark p-2 rounded">
+{{ msg.raw_text }}</pre
+              >
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <div class="alert alert-info">No messages for this user.</div>
+      {% endif %}
+    </div>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>
