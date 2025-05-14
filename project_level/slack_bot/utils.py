@@ -8,14 +8,13 @@ def get_gspread_client():
     raw = os.getenv("GS_CREDENTIALS_JSON")
     if not raw:
         raise RuntimeError("GS_CREDENTIALS_JSON is not set in the environment")
-
     try:
+        # Decode JSON directly — no need to dump it again afterward
         creds_dict = json.loads(raw)
     except json.JSONDecodeError as e:
         logging.error("Failed to parse GS_CREDENTIALS_JSON: %r", raw[:200])
         raise RuntimeError("Invalid JSON in GS_CREDENTIALS_JSON") from e
-
-    return gspread.service_account_from_dict(json.dumps(creds_dict, indent=2))
+    return gspread.service_account_from_dict(creds_dict)
 
 # Function to clean text encoding issues
 def clean_text(text):
