@@ -1,5 +1,15 @@
 import re
 import math
+import json
+import gspread
+import os
+def get_gspread_client():
+    json_str = os.getenv("GS_CREDENTIALS_JSON")
+    if not json_str:
+        raise RuntimeError("GOOGLE_CREDS_JSON is not set in the environment")
+    creds_dict = json.loads(json_str)
+    client = gspread.service_account_from_dict(creds_dict)
+    return client
 
 # Function to clean text encoding issues
 def clean_text(text):

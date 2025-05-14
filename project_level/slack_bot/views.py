@@ -23,6 +23,7 @@ from slack_bot.utils import (
     standardize_time,
     clean_time_column,
     clean_double_ss,
+    get_gspread_client
 )
 
 logger = logging.getLogger(__name__)
@@ -279,7 +280,7 @@ def get_slack_messages_html(request):
     messy_csv["Today task time"] = messy_csv["Today task time"].apply(clean_double_ss)
     messy_csv["Yesterday Total Time (hrs)"] = messy_csv["Yesterday Total Time (hrs)"].apply(clean_double_ss)
 
-    gc = gspread.service_account(filename=settings.GS_CREDENTIALS_JSON)
+    gc = get_gspread_client()
     worksheet = gc.open_by_key(settings.GS_SHEET_KEY )
     current_sheet = worksheet.worksheet(settings.GS_WORKSHEET_NAME)
 
